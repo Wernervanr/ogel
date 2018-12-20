@@ -81,3 +81,10 @@ const calculateScrapPercentage = (grossProduction, scrap) => {
 
     return roundedUpScrapPercentage;
 };
+
+const calculateDowntimePercentage = (totalDownTimeInSeconds) => {
+    const rawDowntimePercentage = (((totalDownTimeInSeconds / 60) / 60) / 24) * 100;
+    const roundedUpDowntimePercentage = Math.ceil(rawDowntimePercentage * 1000) / 1000;
+
+    return roundedUpDowntimePercentage;
+};
