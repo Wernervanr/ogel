@@ -65,4 +65,26 @@ class MachineModel extends PdoModel
 
         return $statement->fetchAll();
     }
+
+    public function getMachineRuntime($machineName, $newDate) : array
+    {
+        $query = "SELECT
+                    *
+                  FROM
+                    Runtime
+                  WHERE
+                    datetime > :datetime 
+                  AND 
+                    machine_name = :machine_name";
+
+        $parameters = [
+            'datetime' => $newDate,
+            'machine_name' => $machineName
+        ];
+
+        $statement = $this->getConnection()->prepare($query);
+        $statement->execute($parameters);
+
+        return $statement->fetchAll();
+    }
 }

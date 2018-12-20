@@ -2,6 +2,7 @@ document.addEventListener('DOMContentLoaded', (event) => {
 
     getAllMachineNames((machineNames) => {
         machineNames.forEach(function(machineName) {
+
             getMachine(machineName)
                 .done((data, text) => {
                     const machineData = data;
@@ -34,6 +35,30 @@ document.addEventListener('DOMContentLoaded', (event) => {
                     // Append to .machineContainer
                     const machinesContainer = document.querySelector('.machineContainer');
                     machinesContainer.appendChild(machineDataDiv);
+                })
+                .fail((request, status, error) => {
+                    console.log('balen');
+                });
+
+            getMachineRuntime(machineName)
+                .done((data, text) => {
+                    const downTimesData = data;
+
+                    console.log(downTimesData[0].datetime);
+
+                    for (i = 0; i < downTimesData.length; i++) {
+                        if (  ){
+
+                        }
+
+
+
+                        if ( i === (monthNumber - 1) ){
+                            return months[i];
+                        }
+                    }
+
+                    console.log(data);
                 })
                 .fail((request, status, error) => {
                     console.log('balen');

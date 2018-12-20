@@ -22,6 +22,7 @@ $app = new App($configuration);
 $app->get('/', 'App\Controller\MachinesStatusController:homepage');
 $app->get('/machines', 'App\Controller\MachinesStatusController:machineNames');
 $app->get('/machines/{MachineName}', 'App\Controller\MachinesStatusController:list');
+$app->get('/machines/runtime/{MachineName}', 'App\Controller\MachinesStatusController:machineRunTime');
 
 // Execute the current request
 $app->run();

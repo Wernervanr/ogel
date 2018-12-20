@@ -7,6 +7,15 @@ const getMachineNames = () => {
     });
 };
 
+const getMachineRuntime = (machineName) => {
+    return $.ajax({
+        url: '/machines/runtime/' + machineName,
+        type: 'GET',
+        contentType:"application/json; charset=utf-8",
+        dataType:"json"
+    });
+};
+
 const getMachine = (machineName) => {
     return $.ajax({
         url: '/machines/' + machineName,

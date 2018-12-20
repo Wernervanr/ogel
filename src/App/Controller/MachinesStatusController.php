@@ -20,13 +20,6 @@ class MachinesStatusController extends BaseController
         return $this->getViewRenderer()->render($response, 'Dashboard/list.php', $viewModel)->withStatus(200);
     }
 
-    public function machineNames(Request $request, Response $response, array $args)
-    {
-        $machineModel = new MachineModel();
-        $machineNames = $machineModel->getMachineNames();
-
-        return $response->withJson($machineNames,201);
-    }
 
     public function list(Request $request, Response $response, array $args)
     {
@@ -38,4 +31,24 @@ class MachinesStatusController extends BaseController
 
         return $response->withJson($machines,201);
     }
+
+    public function machineNames(Request $request, Response $response, array $args)
+    {
+        $machineModel = new MachineModel();
+        $machineNames = $machineModel->getMachineNames();
+
+        return $response->withJson($machineNames,201);
+    }
+
+    public function machineRuntime(Request $request, Response $response, array $args)
+    {
+        $machineName = $args['MachineName'];
+
+        $machineModel = new MachineModel();
+        $lastDateInDb = $machineModel->getLastDate();
+        $machines = $machineModel->getMachineRuntime($machineName, $lastDateInDb);
+
+        return $response->withJson($machines,201);
+    }
+
 }
