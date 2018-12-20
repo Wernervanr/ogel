@@ -18,21 +18,24 @@ document.addEventListener('DOMContentLoaded', (event) => {
                 const totalProduction = totalProductionInLastDay(machineData);
                 const averageCoreTemperature = averageCoreTemperatureInLastDay(machineData);
 
-                // Do something with Data.
-                    // Net production
-                const netProduction = totalProduction - totalScrap;
+                const netProduction = calculateNetProduction(totalProduction, totalScrap);
+                const scrapPercentage = calculateScrapPercentage(totalProduction, totalScrap);
 
-                    // Scrap percentage
-                const rawScrapPercentage = (totalScrap / totalProduction) * 100;
-                const roundedUpScrapPercentage = Math.ceil(rawScrapPercentage * 1000) / 1000;
+                // Create nodes
+                const machineDivHeader = document.createElement('h4');
+                machineDivHeader.setAttribute('class', 'm-3');
+                machineDivHeader.textContent = machineName;
 
+                const netProductionDiv = document.createElement('div');
+                netProductionDiv.textContent = `Net production in last 24 hours: ${netProduction}`;
 
-                // Console.log it.
-                console.log(machineName);
-                console.log('Net Production = ' + netProduction);
-                console.log('Raw scrap percentage = ' + rawScrapPercentage);
-                console.log('Scrap percentage rounded up, to max 3 decimals = ' + roundedUpScrapPercentage);
-                console.log('');
+                const scrapPercentageDiv = document.createElement('div');
+                scrapPercentageDiv.textContent = `Percentage of scrap in last 24 hours: ${scrapPercentage}%`;
+
+                // Append to machineDataDiv
+                machineDataDiv.appendChild(machineDivHeader);
+                machineDataDiv.appendChild(netProductionDiv);
+                machineDataDiv.appendChild(scrapPercentageDiv);
             })
             .fail((request, status, error) => {
                 console.log('balen');

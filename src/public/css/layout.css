@@ -1,0 +1,12 @@
+.statusOk {
+    border: 2px solid lawngreen;
+    margin: 1px;
+}
+
+.statusWarning {
+    border: 2px solid orange;
+}
+
+.statusFatal {
+    border: 2px solid red;
+}
