@@ -38,7 +38,7 @@ class MachineModel extends PdoModel
                   FROM
                     Production
                   WHERE
-                    datetime_to >= :datetime_to 
+                    datetime_to > :datetime_to 
                   AND 
                     machine_name = :machine_name";
 

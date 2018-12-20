@@ -19,9 +19,20 @@ document.addEventListener('DOMContentLoaded', (event) => {
                 const averageCoreTemperature = averageCoreTemperatureInLastDay(machineData);
 
                 // Do something with Data.
-                console.log(totalScrap);
-                console.log(totalProduction);
-                console.log(averageCoreTemperature);
+                    // Net production
+                const netProduction = totalProduction - totalScrap;
+
+                    // Scrap percentage
+                const rawScrapPercentage = (totalScrap / totalProduction) * 100;
+                const roundedUpScrapPercentage = Math.ceil(rawScrapPercentage * 1000) / 1000;
+
+
+                // Console.log it.
+                console.log(machineName);
+                console.log('Net Production = ' + netProduction);
+                console.log('Raw scrap percentage = ' + rawScrapPercentage);
+                console.log('Scrap percentage rounded up, to max 3 decimals = ' + roundedUpScrapPercentage);
+                console.log('');
             })
             .fail((request, status, error) => {
                 console.log('balen');
