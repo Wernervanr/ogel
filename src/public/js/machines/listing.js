@@ -14,39 +14,14 @@ document.addEventListener('DOMContentLoaded', (event) => {
             .done((data, text) => {
                 const machineData = data;
 
-                // Filter the items in the object based on variable_name SCRAP.
-                const sortedByScrap = machineData.filter((machine) => {
-                    if(machine.variable_name === 'SCRAP' ) {
-                        return true;
-                    }
-                });
-                // Count the total amount of scrap in last 24 hours. ///////////// OPLETTEN, bij de return is een overbodige rekensom nodig. Waarom?
-                const totalScrap = sortedByScrap.reduce((total, scrap) => {
-                    return total + (scrap.value - 0);
-                }, 0);
-
-                // Filter the items in the object based on variable_name PRODUCTION.
-                const sortedByProduction = machineData.filter((machine) => {
-                    if(machine.variable_name === 'PRODUCTION' ) {
-                        return true;
-                    }
-                });
-                // Count the total amount of production in last 24 hours. ///////////// OPLETTEN, bij de return is een overbodige rekensom nodig. Waarom?
-                const totalProduction = sortedByProduction.reduce((total, production) => {
-                    return total + (production.value - 0);
-                }, 0);
-
-
-
-                // Unused so far:
-                const sortedByTemperature = machineData.filter((machine) => {
-                    if(machine.variable_name === 'CORE TEMPERATURE' ) {
-                        return true;
-                    }
-                });
+                const totalScrap = totalScrapInLastDay(machineData);
+                const totalProduction = totalProductionInLastDay(machineData);
+                const averageCoreTemperature = averageCoreTemperatureInLastDay(machineData);
 
                 // Do something with Data.
-                console.log(totalProduction - totalScrap);
+                console.log(totalScrap);
+                console.log(totalProduction);
+                console.log(averageCoreTemperature);
             })
             .fail((request, status, error) => {
                 console.log('balen');

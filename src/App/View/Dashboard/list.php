@@ -11,6 +11,7 @@
     </div>
 
     <script src="/js/machines/api.js"></script>
+    <script src="/js/machines/handlers.js"></script>
     <script src="/js/machines/listing.js"></script>
 
 <?php include_once(__DIR__ . '/../Components/footer.php'); ?>

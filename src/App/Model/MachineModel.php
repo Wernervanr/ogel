@@ -28,7 +28,6 @@ class MachineModel extends PdoModel
 
         $newDate = date('Y-m-d H:i:s', $fullDayBeforeLastDateInDb);
 
-        // Return the new date
         return $newDate;
     }
 
