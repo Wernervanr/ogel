@@ -6,9 +6,8 @@ namespace App\Model;
 
 class MachineModel extends PdoModel
 {
-    public function getMachine($machineName) : array
+    public function getLastDate() : string
     {
-        // Determine the date of the last inserted machine data
         $query =   "SELECT
                       datetime_to
                     FROM
@@ -24,13 +23,17 @@ class MachineModel extends PdoModel
         $result = $statementOne->fetch();
 
         // Convert the result, a string, to UNIX timestamp and subtract 24 hours. Convert back to DATETIME format after.
-
         $lastDateInDb = strtotime($result['datetime_to']);
         $fullDayBeforeLastDateInDb = strtotime('-24 hour', $lastDateInDb);
 
         $newDate = date('Y-m-d H:i:s', $fullDayBeforeLastDateInDb);
 
-        // Get all data from the machine within the last 24 hours the last known datetime_to.
+        // Return the new date
+        return $newDate;
+    }
+
+    public function getMachine($machineName, $newDate) : array
+    {
         $query = "SELECT
                     *
                   FROM
@@ -45,9 +48,9 @@ class MachineModel extends PdoModel
             'machine_name' => $machineName
         ];
 
-        $statementTwo = $this->getConnection()->prepare($query);
-        $statementTwo->execute($parameters);
+        $statement = $this->getConnection()->prepare($query);
+        $statement->execute($parameters);
 
-        return $statementTwo->fetchAll();
+        return $statement->fetchAll();
     }
 }

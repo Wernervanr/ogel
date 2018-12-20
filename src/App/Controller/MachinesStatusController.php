@@ -25,7 +25,8 @@ class MachinesStatusController extends BaseController
         $machineName = $args['MachineName'];
 
         $machineModel = new MachineModel();
-        $machines = $machineModel->getMachine($machineName);
+        $lastDateInDb = $machineModel->getLastDate();
+        $machines = $machineModel->getMachine($machineName, $lastDateInDb);
 
         return $response->withJson($machines,201);
     }
