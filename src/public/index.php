@@ -20,7 +20,8 @@ $app = new App($configuration);
 
 // Define our routes
 $app->get('/', 'App\Controller\MachinesStatusController:homepage');
-$app->get('/machines/{MachineName}/', 'App\Controller\MachinesStatusController:list');
+$app->get('/machines', 'App\Controller\MachinesStatusController:machineNames');
+$app->get('/machines/{MachineName}', 'App\Controller\MachinesStatusController:list');
 
 // Execute the current request
 $app->run();

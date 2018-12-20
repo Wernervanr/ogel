@@ -1,3 +1,23 @@
+// GET MACHINE NAMES
+
+const getAllMachineNames = (callback) => {
+    getMachineNames()
+        .done((data, text) => {
+            let machineNames = [];
+
+            data.forEach(function(machineName) {
+                machineNames.push(machineName.machine_name);
+            });
+
+            callback(machineNames);
+        })
+        .fail((request, status, error) => {
+            console.log('balen');
+        });
+};
+
+// DETERMINERS
+
 const totalScrapInLastDay = (machineData) => {
     const sortedByScrap = machineData.filter((machine) => {
         if(machine.variable_name === 'SCRAP' ) {
@@ -46,6 +66,8 @@ const averageCoreTemperatureInLastDay = (machineData) => {
 
     return averageCoreTemperature;
 };
+
+// CALCULATORS
 
 const calculateNetProduction = (grossProduction, scrap) => {
     const netProduction = grossProduction - scrap;

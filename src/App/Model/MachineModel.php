@@ -6,6 +6,21 @@ namespace App\Model;
 
 class MachineModel extends PdoModel
 {
+    public function getMachineNames() : array
+    {
+        $query =   "SELECT DISTINCT 
+                      machine_name
+                    FROM
+                      Production";
+
+        $statement = $this->getConnection()->prepare($query);
+        $statement->execute();
+
+        return $statement->fetchAll();
+    }
+
+
+
     public function getLastDate() : string
     {
         $query =   "SELECT
@@ -17,10 +32,10 @@ class MachineModel extends PdoModel
                     DESC 
                     LIMIT 1";
 
-        $statementOne = $this->getConnection()->prepare($query);
-        $statementOne->execute();
+        $statement = $this->getConnection()->prepare($query);
+        $statement->execute();
 
-        $result = $statementOne->fetch();
+        $result = $statement->fetch();
 
         // Convert the result, a string, to UNIX timestamp and subtract 24 hours. Convert back to DATETIME format after.
         $lastDateInDb = strtotime($result['datetime_to']);
