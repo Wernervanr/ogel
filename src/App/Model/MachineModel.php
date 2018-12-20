@@ -73,7 +73,7 @@ class MachineModel extends PdoModel
                   FROM
                     Runtime
                   WHERE
-                    datetime > :datetime 
+                    datetime >= :datetime 
                   AND 
                     machine_name = :machine_name";
 

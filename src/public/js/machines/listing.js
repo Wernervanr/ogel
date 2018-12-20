@@ -44,21 +44,7 @@ document.addEventListener('DOMContentLoaded', (event) => {
                 .done((data, text) => {
                     const downTimesData = data;
 
-                    console.log(downTimesData[0].datetime);
-
-                    for (i = 0; i < downTimesData.length; i++) {
-                        if (  ){
-
-                        }
-
-
-
-                        if ( i === (monthNumber - 1) ){
-                            return months[i];
-                        }
-                    }
-
-                    console.log(data);
+                    console.log(downTimesData);
                 })
                 .fail((request, status, error) => {
                     console.log('balen');

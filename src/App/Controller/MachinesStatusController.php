@@ -46,9 +46,20 @@ class MachinesStatusController extends BaseController
 
         $machineModel = new MachineModel();
         $lastDateInDb = $machineModel->getLastDate();
-        $machines = $machineModel->getMachineRuntime($machineName, $lastDateInDb);
+        $machineRuntime = $machineModel->getMachineRuntime($machineName, $lastDateInDb);
 
-        return $response->withJson($machines,201);
+        $totalDownTime = 0;
+        for ($i = 0; $i < count($machineRuntime); $i++) {
+            if ($i > 0 && $machineRuntime[$i]['isrunning'] > $machineRuntime[($i - 1)]['isrunning']) {
+                $convertedTimeStringA = strtotime($machineRuntime[$i]['datetime']);
+                $convertedTimeStringB = strtotime($machineRuntime[($i - 1)]['datetime']);
+
+                $downtime = $convertedTimeStringA - $convertedTimeStringB;
+                $totalDownTime += $downtime;
+            }
+        }
+
+        return $response->withJson($totalDownTime,201);
     }
 
 }
