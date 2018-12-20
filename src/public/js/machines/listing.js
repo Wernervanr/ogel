@@ -6,6 +6,7 @@ document.addEventListener('DOMContentLoaded', (event) => {
                 .done((data, text) => {
                     const machineData = data;
 
+                    // Filter data
                     const totalScrap = totalScrapInLastDay(machineData);
                     const totalProduction = totalProductionInLastDay(machineData);
                     const averageCoreTemperature = averageCoreTemperatureInLastDay(machineData);
@@ -25,7 +26,7 @@ document.addEventListener('DOMContentLoaded', (event) => {
                     scrapPercentageDiv.textContent = `Percentage of scrap in last 24 hours: ${scrapPercentage}%`;
 
                     const machineDataDiv = document.createElement('div');
-                    machineDataDiv.setAttribute('class', 'col-lg-6 col-xl-4 border');
+                    machineDataDiv.setAttribute('class', 'col-lg-6 col-xl-4 border pb-3');
                     machineDataDiv.appendChild(machineDivHeader);
                     machineDataDiv.appendChild(netProductionDiv);
                     machineDataDiv.appendChild(scrapPercentageDiv);

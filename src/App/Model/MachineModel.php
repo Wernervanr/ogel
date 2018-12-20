@@ -19,8 +19,6 @@ class MachineModel extends PdoModel
         return $statement->fetchAll();
     }
 
-
-
     public function getLastDate() : string
     {
         $query =   "SELECT
