@@ -50,16 +50,22 @@ class MachinesStatusController extends BaseController
 
         $totalDownTime = 0;
         for ($i = 0; $i < count($machineRuntime); $i++) {
-            if ($i > 0 && $machineRuntime[$i]['isrunning'] > $machineRuntime[($i - 1)]['isrunning']) {
+            if ($machineRuntime[($i +1)]['isrunning'] > $machineRuntime[($i)]['isrunning']) {
                 $convertedTimeStringA = strtotime($machineRuntime[$i]['datetime']);
-                $convertedTimeStringB = strtotime($machineRuntime[($i - 1)]['datetime']);
+                $convertedTimeStringB = strtotime($machineRuntime[($i + 1)]['datetime']);
 
-                $downtime = $convertedTimeStringA - $convertedTimeStringB;
+                $downtime = $convertedTimeStringB - $convertedTimeStringA;
+                $totalDownTime += $downtime;
+
+            } else if ($machineRuntime[$i]['isrunning'] == 0 && end($machineRuntime) == $machineRuntime[$i]) {
+                $convertedTimeStringA = strtotime($machineRuntime[$i]['datetime']);
+                $convertedTimeStringB = strtotime('+24 hour', strtotime($lastDateInDb));
+
+                $downtime = $convertedTimeStringB - $convertedTimeStringA;
                 $totalDownTime += $downtime;
             }
         }
 
         return $response->withJson($totalDownTime,201);
     }
-
 }
