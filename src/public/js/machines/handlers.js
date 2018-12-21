@@ -85,7 +85,7 @@ const determineMachineStatus = (machineData) => {
         }
     });
 
-    const determineIfWarning = (potentialWarningsObject) => {
+    const checkIfWarning = (potentialWarningsObject) => {
         for (i = 3; i < potentialWarningsObject.length; i++) {
             let a = potentialWarningsObject[i];
             let b = potentialWarningsObject[(i - 1)];
@@ -98,14 +98,14 @@ const determineMachineStatus = (machineData) => {
         }
     };
 
-    const determineIfFatal = (potentialFatalsObject) => {
+    const checkIfFatal = (potentialFatalsObject) => {
         if (potentialFatalsObject.length > 0) {
             return true;
         }
     };
 
-    const isWarning = determineIfWarning(filteredByPotentialWarnings);
-    const isFatal = determineIfFatal(filteredByPotentialFatals);
+    const isWarning = checkIfWarning(filteredByPotentialWarnings);
+    const isFatal = checkIfFatal(filteredByPotentialFatals);
 
     if (isWarning === true){
         return 'statusWarning';
