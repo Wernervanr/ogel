@@ -14,6 +14,28 @@ const getAllMachineNames = (callback) => {
         });
 };
 
+// CALCULATORS
+
+const calculateNetProduction = (grossProduction, scrap) => {
+    const netProduction = grossProduction - scrap;
+
+    return netProduction;
+};
+
+const calculateScrapPercentage = (grossProduction, scrap) => {
+    const rawScrapPercentage = (scrap / grossProduction) * 100;
+    const roundedUpScrapPercentage = Math.ceil(rawScrapPercentage * 1000) / 1000;
+
+    return roundedUpScrapPercentage;
+};
+
+const calculateDowntimePercentage = (totalDownTimeInSeconds) => {
+    const rawDowntimePercentage = (((totalDownTimeInSeconds / 60) / 60) / 24) * 100;
+    const roundedUpDowntimePercentage = Math.ceil(rawDowntimePercentage * 1000) / 1000;
+
+    return roundedUpDowntimePercentage;
+};
+
 // DETERMINERS
 
 const totalScrapInLastDay = (machineData) => {
@@ -47,15 +69,24 @@ const totalProductionInLastDay = (machineData) => {
 };
 
 const determineMachineStatus = (machineData) => {
-
-    // FILTERS
     const filteredByCoreTemperature = machineData.filter((machine) => {
         if (machine.variable_name === 'CORE TEMPERATURE') {
             return true;
         }
     });
 
-    // DETERMINE IF WARNING TEMPERATURE
+    const filteredByPotentialWarnings = filteredByCoreTemperature.filter((coreTemperature) => {
+        if(coreTemperature.value > 85 && coreTemperature.value <= 100) {
+            return true;
+        }
+    });
+
+    const filteredByPotentialFatals = filteredByCoreTemperature.filter((coreTemperature) => {
+        if(coreTemperature.value > 100) {
+            return true;
+        }
+    });
+
     const determineIfWarning = (potentialWarningsObject) => {
         for (i = 3; i < potentialWarningsObject.length; i++) {
             let a = potentialWarningsObject[i];
@@ -69,61 +100,20 @@ const determineMachineStatus = (machineData) => {
         }
     };
 
-    const objectOfPotentialWarnings = filteredByCoreTemperature.filter((coreTemperature) => {
-        if(coreTemperature.value > 85 && coreTemperature.value <= 100) {
-            return true;
-        }
-    });
-
-    // DETERMINE IF FATAL TEMPERATURE
-
     const determineIfFatal = (potentialFatalsObject) => {
         if (potentialFatalsObject.length > 0) {
             return true;
         }
     };
 
-    const objectOfPotentialFatals = filteredByCoreTemperature.filter((coreTemperature) => {
-        if(coreTemperature.value > 100) {
-            return true;
-        }
-    });
-
-    // RETURN MACHINESTATUS
-
-    const isWarning = determineIfWarning(objectOfPotentialWarnings);
-    const isFatal = determineIfFatal(objectOfPotentialFatals);
-    let machineStatus = '';
+    const isWarning = determineIfWarning(filteredByPotentialWarnings);
+    const isFatal = determineIfFatal(filteredByPotentialFatals);
 
     if (isWarning === true){
-        machineStatus = 'Warning';
+        return 'Warning';
     } else if (isFatal === true) {
-        machineStatus = 'Fatal';
+        return 'Fatal';
     } else {
-        machineStatus = 'Good';
+        return 'Good';
     }
-
-    return machineStatus;
-};
-
-// CALCULATORS
-
-const calculateNetProduction = (grossProduction, scrap) => {
-    const netProduction = grossProduction - scrap;
-
-    return netProduction;
-};
-
-const calculateScrapPercentage = (grossProduction, scrap) => {
-    const rawScrapPercentage = (scrap / grossProduction) * 100;
-    const roundedUpScrapPercentage = Math.ceil(rawScrapPercentage * 1000) / 1000;
-
-    return roundedUpScrapPercentage;
-};
-
-const calculateDowntimePercentage = (totalDownTimeInSeconds) => {
-    const rawDowntimePercentage = (((totalDownTimeInSeconds / 60) / 60) / 24) * 100;
-    const roundedUpDowntimePercentage = Math.ceil(rawDowntimePercentage * 1000) / 1000;
-
-    return roundedUpDowntimePercentage;
 };
