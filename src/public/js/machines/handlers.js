@@ -59,6 +59,7 @@ const calculateDowntimePercentage = (totalDownTimeInSeconds) => {
 //     return roundedUpAvailabilityPercentage;
 // };
 
+
 // DETERMINERS
 
 const determineScrapInLastDay = (machineData) => {
