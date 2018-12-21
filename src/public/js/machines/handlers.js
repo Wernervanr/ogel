@@ -74,13 +74,11 @@ const determineMachineStatus = (machineData) => {
             return true;
         }
     });
-
     const filteredByPotentialWarnings = filteredByCoreTemperature.filter((coreTemperature) => {
         if(coreTemperature.value > 85 && coreTemperature.value <= 100) {
             return true;
         }
     });
-
     const filteredByPotentialFatals = filteredByCoreTemperature.filter((coreTemperature) => {
         if(coreTemperature.value > 100) {
             return true;

@@ -21,7 +21,7 @@ $app = new App($configuration);
 // Define our routes
 $app->get('/', 'App\Controller\MachinesStatusController:homepage');
 $app->get('/machines', 'App\Controller\MachinesStatusController:machineNames');
-$app->get('/machines/{MachineName}', 'App\Controller\MachinesStatusController:list');
+$app->get('/machines/{MachineName}', 'App\Controller\MachinesStatusController:machineData');
 $app->get('/machines/runtime/{MachineName}', 'App\Controller\MachinesStatusController:machineRunTime');
 $app->get('/machines/produceperhour/{MachineName}', 'App\Controller\MachinesStatusController:productionPerHour');
 

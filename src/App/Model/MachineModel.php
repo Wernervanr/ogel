@@ -44,7 +44,7 @@ class MachineModel extends PdoModel
         return $newDate;
     }
 
-    public function getMachine($machineName, $newDate) : array
+    public function getMachineData($machineName, $newDate) : array
     {
         $query = "SELECT
                     *
@@ -88,7 +88,7 @@ class MachineModel extends PdoModel
         return $statement->fetchAll();
     }
 
-    public function getVariablePerHour($machineName, $newDate, $variableName, $newDatePlusHour) : array
+    public function getMachineDataPerHour($machineName, $newDate, $variableName, $newDatePlusHour) : array
     {
         $query = "SELECT
                     *

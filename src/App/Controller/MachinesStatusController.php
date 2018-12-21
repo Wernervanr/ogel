@@ -28,13 +28,13 @@ class MachinesStatusController extends BaseController
         return $response->withJson($machineNames,201);
     }
 
-    public function list(Request $request, Response $response, array $args)
+    public function machineData(Request $request, Response $response, array $args)
     {
         $machineName = $args['MachineName'];
 
         $machineModel = new MachineModel();
         $lastDateInDb = $machineModel->getLastDate();
-        $machines = $machineModel->getMachine($machineName, $lastDateInDb);
+        $machines = $machineModel->getMachineData($machineName, $lastDateInDb);
 
         return $response->withJson($machines,201);
     }
@@ -80,17 +80,16 @@ class MachinesStatusController extends BaseController
         for ($i = 0; $i < 24; $i++) {
             $parsedLastDateInDb = strtotime($lastDateInDb);
             $parsedLastDatePlusOneHour = strtotime('1 hour', $parsedLastDateInDb);
-
             $lastDatePlusOneHour = date('Y-m-d H:i:s', $parsedLastDatePlusOneHour);
 
             $netProductionPerHour = 0;
 
-            $productionWithinHour = $machineModel->getVariablePerHour($machineName, $lastDateInDb, 'PRODUCTION', $lastDatePlusOneHour);
+            $productionWithinHour = $machineModel->getMachineDataPerHour($machineName, $lastDateInDb, 'PRODUCTION', $lastDatePlusOneHour);
             foreach ($productionWithinHour as $productionPerTimeUnit) {
                 $netProductionPerHour += $productionPerTimeUnit['value'];
             }
 
-            $scrapWithinHour = $machineModel->getVariablePerHour($machineName, $lastDateInDb, 'SCRAP', $lastDatePlusOneHour);
+            $scrapWithinHour = $machineModel->getMachineDataPerHour($machineName, $lastDateInDb, 'SCRAP', $lastDatePlusOneHour);
             foreach ($scrapWithinHour as $scrapPerTimeUnit) {
                 $netProductionPerHour -= $scrapPerTimeUnit['value'];
             }
