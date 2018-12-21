@@ -51,12 +51,12 @@ class MachineModel extends PdoModel
                   FROM
                     Production
                   WHERE
-                    datetime_to > :datetime_to 
+                    datetime_from >= :datetime_from
                   AND 
                     machine_name = :machine_name";
 
         $parameters = [
-            'datetime_to' => $newDate,
+            'datetime_from' => $newDate,
             'machine_name' => $machineName
         ];
 
@@ -80,6 +80,34 @@ class MachineModel extends PdoModel
         $parameters = [
             'datetime' => $newDate,
             'machine_name' => $machineName
+        ];
+
+        $statement = $this->getConnection()->prepare($query);
+        $statement->execute($parameters);
+
+        return $statement->fetchAll();
+    }
+
+    public function getVariablePerHour($machineName, $newDate, $variableName, $newDatePlusHour) : array
+    {
+        $query = "SELECT
+                    *
+                  FROM
+                    Production
+                  WHERE
+                    machine_name = :machine_name
+                  AND 
+                    variable_name = :variable_name
+                  AND 
+                    datetime_from >= :datetime_from
+                  AND
+                    datetime_to <= :datetime_to";
+
+        $parameters = [
+            'datetime_from' => $newDate,
+            'datetime_to' => $newDatePlusHour,
+            'machine_name' => $machineName,
+            'variable_name' => $variableName
         ];
 
         $statement = $this->getConnection()->prepare($query);

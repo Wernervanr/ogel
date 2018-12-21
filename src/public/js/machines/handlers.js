@@ -110,10 +110,10 @@ const determineMachineStatus = (machineData) => {
     const isFatal = determineIfFatal(filteredByPotentialFatals);
 
     if (isWarning === true){
-        return 'Warning';
+        return 'statusWarning';
     } else if (isFatal === true) {
-        return 'Fatal';
+        return 'statusFatal';
     } else {
-        return 'Good';
+        return 'statusOk';
     }
 };

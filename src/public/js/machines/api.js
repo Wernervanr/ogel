@@ -7,6 +7,15 @@ const getMachineNames = () => {
     });
 };
 
+const getProducePerHour = (machineName) => {
+    return $.ajax({
+        url: '/machines/produceperhour/' + machineName,
+        type: 'GET',
+        contentType:"application/json; charset=utf-8",
+        dataType:"json"
+    });
+};
+
 const getMachineRuntime = (machineName) => {
     return $.ajax({
         url: '/machines/runtime/' + machineName,

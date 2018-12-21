@@ -3,13 +3,8 @@ document.addEventListener('DOMContentLoaded', (event) => {
     getAllMachineNames((machineNames) => {
         machineNames.forEach(function(machineName) {
 
-            const machineDivHeader = document.createElement('h4');
-            machineDivHeader.setAttribute('class', 'm-3 order-1');
-            machineDivHeader.textContent = machineName;
-
             const machineDataDiv = document.createElement('div');
             machineDataDiv.setAttribute('class', 'col-lg-6 col-xl-4 border pb-3 d-flex flex-column');
-            machineDataDiv.appendChild(machineDivHeader);
 
             const machinesContainer = document.querySelector('.machineContainer');
             machinesContainer.appendChild(machineDataDiv);
@@ -21,16 +16,18 @@ document.addEventListener('DOMContentLoaded', (event) => {
                     // Filter data
                     const totalScrap = totalScrapInLastDay(machineData);
                     const totalProduction = totalProductionInLastDay(machineData);
-                    // const averageCoreTemperature = averageCoreTemperatureInLastDay(machineData);
                     const temperatureStatus = determineMachineStatus(machineData);
-
-                    console.log(temperatureStatus + ' ' + machineName);
 
                     // Calculate data
                     const netProduction = calculateNetProduction(totalProduction, totalScrap);
                     const scrapPercentage = calculateScrapPercentage(totalProduction, totalScrap);
 
                     // Create nodes
+                    const machineDivHeader = document.createElement('h4');
+                    machineDivHeader.setAttribute('class', 'm-3 order-1 ' + temperatureStatus);
+                    machineDivHeader.textContent = machineName;
+                    machineDataDiv.appendChild(machineDivHeader);
+
                     const netProductionDiv = document.createElement('div');
                     netProductionDiv.setAttribute('class', 'order-2');
                     netProductionDiv.textContent = `Net production in last 24 hours: ${netProduction}`;
@@ -62,8 +59,13 @@ document.addEventListener('DOMContentLoaded', (event) => {
                     console.log('balen');
                 });
 
-
-
+            getProducePerHour(machineName)
+                .done((data, text) => {
+                    console.log(data);
+                })
+                .fail((request, status, error) => {
+                    console.log('balen joh');
+                });
         });
     });
 });

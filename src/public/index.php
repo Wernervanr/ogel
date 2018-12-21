@@ -23,6 +23,7 @@ $app->get('/', 'App\Controller\MachinesStatusController:homepage');
 $app->get('/machines', 'App\Controller\MachinesStatusController:machineNames');
 $app->get('/machines/{MachineName}', 'App\Controller\MachinesStatusController:list');
 $app->get('/machines/runtime/{MachineName}', 'App\Controller\MachinesStatusController:machineRunTime');
+$app->get('/machines/produceperhour/{MachineName}', 'App\Controller\MachinesStatusController:productionPerHour');
 
 // Execute the current request
 $app->run();
