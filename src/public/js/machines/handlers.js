@@ -1,5 +1,3 @@
-// GET MACHINE NAMES
-
 const getAllMachineNames = (callback) => {
     getMachineNames()
         .done((data, text) => {
@@ -49,56 +47,64 @@ const totalProductionInLastDay = (machineData) => {
 };
 
 const determineMachineStatus = (machineData) => {
+
+    // FILTERS
     const filteredByCoreTemperature = machineData.filter((machine) => {
         if (machine.variable_name === 'CORE TEMPERATURE') {
             return true;
         }
     });
 
-    const potentialWarning = filteredByCoreTemperature.filter((coreTemperature) => {
+    // DETERMINE IF WARNING TEMPERATURE
+    const determineIfWarning = (potentialWarningsObject) => {
+        for (i = 3; i < potentialWarningsObject.length; i++) {
+            let a = potentialWarningsObject[i];
+            let b = potentialWarningsObject[(i - 1)];
+            let c = potentialWarningsObject[(i - 2)];
+            let d = potentialWarningsObject[(i - 3)];
+
+            if (a.datetime_from === b.datetime_to && b.datetime_from === c.datetime_to && c.datetime_from === d.datetime_to) {
+                return true;
+            }
+        }
+    };
+
+    const objectOfPotentialWarnings = filteredByCoreTemperature.filter((coreTemperature) => {
         if(coreTemperature.value > 85 && coreTemperature.value <= 100) {
             return true;
         }
     });
 
-    for (i = 0; i < potentialWarning.length; i++) {
-        if (potentialWarning[i].datetime_to === potentialWarning[(i + 1)].datetime_from) {
-            if (potentialWarning[(i + 1)].datetime_to === potentialWarning[(i + 2)].datetime_from) {
-                const hoi = potentialWarning[i];
-                const hoiook = potentialWarning[(i + 1)];
-                const hoialsook = potentialWarning[(i + 2)];
-                console.log(hoi);
-                console.log(hoiook);
-                console.log(hoialsook);
-            }
+    // DETERMINE IF FATAL TEMPERATURE
+
+    const determineIfFatal = (potentialFatalsObject) => {
+        if (potentialFatalsObject.length > 0) {
+            return true;
         }
+    };
+
+    const objectOfPotentialFatals = filteredByCoreTemperature.filter((coreTemperature) => {
+        if(coreTemperature.value > 100) {
+            return true;
+        }
+    });
+
+    // RETURN MACHINESTATUS
+
+    const isWarning = determineIfWarning(objectOfPotentialWarnings);
+    const isFatal = determineIfFatal(objectOfPotentialFatals);
+    let machineStatus = '';
+
+    if (isWarning === true){
+        machineStatus = 'Warning';
+    } else if (isFatal === true) {
+        machineStatus = 'Fatal';
+    } else {
+        machineStatus = 'Good';
     }
 
-
-
-    // console.log(testFilter);
-
-
+    return machineStatus;
 };
-
-// const averageCoreTemperatureInLastDay = (machineData) => {
-//     const sortedByTemperature = machineData.filter((machine) => {
-//         if(machine.variable_name === 'CORE TEMPERATURE' ) {
-//             return true;
-//         }
-//     });
-//
-//     // Determine the amount the core temperature is measured,
-//     const timesCoreTemperatureIsMeasured = sortedByTemperature.length;
-//     // Add-up the temperature for each time this was measured.
-//     const totalCoreTemperature = sortedByTemperature.reduce((total, temperature) => {
-//         return total + (temperature.value - 0);
-//     }, 0);
-//     // Divide the total of the added up temperatures by the amount that the temperature was measured.
-//     const averageCoreTemperature = totalCoreTemperature / timesCoreTemperatureIsMeasured;
-//
-//     return averageCoreTemperature;
-// };
 
 // CALCULATORS
 

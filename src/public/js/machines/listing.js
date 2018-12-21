@@ -24,6 +24,8 @@ document.addEventListener('DOMContentLoaded', (event) => {
                     // const averageCoreTemperature = averageCoreTemperatureInLastDay(machineData);
                     const temperatureStatus = determineMachineStatus(machineData);
 
+                    console.log(temperatureStatus + ' ' + machineName);
+
                     // Calculate data
                     const netProduction = calculateNetProduction(totalProduction, totalScrap);
                     const scrapPercentage = calculateScrapPercentage(totalProduction, totalScrap);
