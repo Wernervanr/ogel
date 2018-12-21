@@ -4,11 +4,11 @@ document.addEventListener('DOMContentLoaded', (event) => {
         machineNames.forEach(function(machineName) {
 
             const machineDivHeader = document.createElement('h4');
-            machineDivHeader.setAttribute('class', 'm-3');
+            machineDivHeader.setAttribute('class', 'm-3 order-1');
             machineDivHeader.textContent = machineName;
 
             const machineDataDiv = document.createElement('div');
-            machineDataDiv.setAttribute('class', 'col-lg-6 col-xl-4 border pb-3');
+            machineDataDiv.setAttribute('class', 'col-lg-6 col-xl-4 border pb-3 d-flex flex-column');
             machineDataDiv.appendChild(machineDivHeader);
 
             const machinesContainer = document.querySelector('.machineContainer');
@@ -21,7 +21,8 @@ document.addEventListener('DOMContentLoaded', (event) => {
                     // Filter data
                     const totalScrap = totalScrapInLastDay(machineData);
                     const totalProduction = totalProductionInLastDay(machineData);
-                    const averageCoreTemperature = averageCoreTemperatureInLastDay(machineData);
+                    // const averageCoreTemperature = averageCoreTemperatureInLastDay(machineData);
+                    const temperatureStatus = determineMachineStatus(machineData);
 
                     // Calculate data
                     const netProduction = calculateNetProduction(totalProduction, totalScrap);
@@ -29,10 +30,12 @@ document.addEventListener('DOMContentLoaded', (event) => {
 
                     // Create nodes
                     const netProductionDiv = document.createElement('div');
+                    netProductionDiv.setAttribute('class', 'order-2');
                     netProductionDiv.textContent = `Net production in last 24 hours: ${netProduction}`;
                     machineDataDiv.appendChild(netProductionDiv);
 
                     const scrapPercentageDiv = document.createElement('div');
+                    scrapPercentageDiv.setAttribute('class', 'order-3');
                     scrapPercentageDiv.textContent = `Scrap percentage in last 24 hours: ${scrapPercentage}%`;
                     machineDataDiv.appendChild(scrapPercentageDiv);
                 })
@@ -49,14 +52,16 @@ document.addEventListener('DOMContentLoaded', (event) => {
 
                     // Create nodes
                     const downtimePercentageDiv = document.createElement('div');
+                    downtimePercentageDiv.setAttribute('class', 'order-4');
                     downtimePercentageDiv.textContent = `Downtime percentage in last 24 hours: ${downtimePercentage}%`;
                     machineDataDiv.appendChild(downtimePercentageDiv);
                 })
                 .fail((request, status, error) => {
                     console.log('balen');
                 });
+
+
+
         });
     });
 });
-
-// col-first oid meegeven vanuit bootstrap om de volgorde altijd vast te zetten.

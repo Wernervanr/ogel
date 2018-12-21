@@ -19,14 +19,14 @@ const getAllMachineNames = (callback) => {
 // DETERMINERS
 
 const totalScrapInLastDay = (machineData) => {
-    const sortedByScrap = machineData.filter((machine) => {
+    const filteredByScrap = machineData.filter((machine) => {
         if(machine.variable_name === 'SCRAP' ) {
             return true;
         }
     });
 
     // Count the total amount of scrap in last 24 hours. ///////////// OPLETTEN, bij de return is een overbodige rekensom nodig. Waarom?
-    const totalScrap = sortedByScrap.reduce((total, scrap) => {
+    const totalScrap = filteredByScrap.reduce((total, scrap) => {
         return total + (scrap.value - 0);
     }, 0);
 
@@ -34,38 +34,71 @@ const totalScrapInLastDay = (machineData) => {
 };
 
 const totalProductionInLastDay = (machineData) => {
-    const sortedByProduction = machineData.filter((machine) => {
+    const filteredByProduction = machineData.filter((machine) => {
         if(machine.variable_name === 'PRODUCTION' ) {
             return true;
         }
     });
 
     // Count the total amount of production in last 24 hours. ///////////// OPLETTEN, bij de return is een overbodige rekensom nodig. Waarom?
-    const totalProduction = sortedByProduction.reduce((total, production) => {
+    const totalProduction = filteredByProduction.reduce((total, production) => {
         return total + (production.value - 0);
     }, 0);
 
     return totalProduction;
 };
 
-const averageCoreTemperatureInLastDay = (machineData) => {
-    const sortedByTemperature = machineData.filter((machine) => {
-        if(machine.variable_name === 'CORE TEMPERATURE' ) {
+const determineMachineStatus = (machineData) => {
+    const filteredByCoreTemperature = machineData.filter((machine) => {
+        if (machine.variable_name === 'CORE TEMPERATURE') {
             return true;
         }
     });
 
-    // Determine the amount the core temperature is measured,
-    const timesCoreTemperatureIsMeasured = sortedByTemperature.length;
-    // Add-up the temperature for each time this was measured.
-    const totalCoreTemperature = sortedByTemperature.reduce((total, temperature) => {
-        return total + (temperature.value - 0);
-    }, 0);
-    // Divide the total of the added up temperatures by the amount that the temperature was measured.
-    const averageCoreTemperature = totalCoreTemperature / timesCoreTemperatureIsMeasured;
+    const potentialWarning = filteredByCoreTemperature.filter((coreTemperature) => {
+        if(coreTemperature.value > 85 && coreTemperature.value <= 100) {
+            return true;
+        }
+    });
 
-    return averageCoreTemperature;
+    for (i = 0; i < potentialWarning.length; i++) {
+        if (potentialWarning[i].datetime_to === potentialWarning[(i + 1)].datetime_from) {
+            if (potentialWarning[(i + 1)].datetime_to === potentialWarning[(i + 2)].datetime_from) {
+                const hoi = potentialWarning[i];
+                const hoiook = potentialWarning[(i + 1)];
+                const hoialsook = potentialWarning[(i + 2)];
+                console.log(hoi);
+                console.log(hoiook);
+                console.log(hoialsook);
+            }
+        }
+    }
+
+
+
+    // console.log(testFilter);
+
+
 };
+
+// const averageCoreTemperatureInLastDay = (machineData) => {
+//     const sortedByTemperature = machineData.filter((machine) => {
+//         if(machine.variable_name === 'CORE TEMPERATURE' ) {
+//             return true;
+//         }
+//     });
+//
+//     // Determine the amount the core temperature is measured,
+//     const timesCoreTemperatureIsMeasured = sortedByTemperature.length;
+//     // Add-up the temperature for each time this was measured.
+//     const totalCoreTemperature = sortedByTemperature.reduce((total, temperature) => {
+//         return total + (temperature.value - 0);
+//     }, 0);
+//     // Divide the total of the added up temperatures by the amount that the temperature was measured.
+//     const averageCoreTemperature = totalCoreTemperature / timesCoreTemperatureIsMeasured;
+//
+//     return averageCoreTemperature;
+// };
 
 // CALCULATORS
 
