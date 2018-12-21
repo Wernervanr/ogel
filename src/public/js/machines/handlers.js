@@ -36,9 +36,32 @@ const calculateDowntimePercentage = (totalDownTimeInSeconds) => {
     return roundedUpDowntimePercentage;
 };
 
+// const calculatePerformancePercentage = (netProduction) => {
+//     const rawPerformancePercentage = (netProduction / (24 * 30000)) * 100;
+//     const roundedUpPerformancePercentage = Math.ceil(rawPerformancePercentage * 100) / 100;
+//
+//     return roundedUpPerformancePercentage;
+// };
+//
+// const calculateQualityPercentage = (netProduction, totalProduction) => {
+//     const rawQualityPercentage = (netProduction / totalProduction) * 100;
+//     const roundedUpQualityPercentage = Math.ceil(rawQualityPercentage * 100) / 100;
+//
+//     return roundedUpQualityPercentage;
+// };
+//
+// const calculateAvailabilityPercentage = (downtimePercentage) => {
+//     const uptimePercentage = 100 - downtimePercentage;
+//     const rawAvailabilityPercentage = (uptimePercentage / 75) * 100;
+//     const roundedUpAvailabilityPercentage = Math.ceil(rawAvailabilityPercentage * 100) / 100;
+//
+//
+//     return roundedUpAvailabilityPercentage;
+// };
+
 // DETERMINERS
 
-const totalScrapInLastDay = (machineData) => {
+const determineScrapInLastDay = (machineData) => {
     const filteredByScrap = machineData.filter((machine) => {
         if(machine.variable_name === 'SCRAP' ) {
             return true;
@@ -53,7 +76,7 @@ const totalScrapInLastDay = (machineData) => {
     return totalScrap;
 };
 
-const totalProductionInLastDay = (machineData) => {
+const determineProductionInLastDay = (machineData) => {
     const filteredByProduction = machineData.filter((machine) => {
         if(machine.variable_name === 'PRODUCTION' ) {
             return true;

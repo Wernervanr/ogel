@@ -14,13 +14,16 @@ document.addEventListener('DOMContentLoaded', (event) => {
                     const machineData = data;
 
                     // Filter data
-                    const totalScrap = totalScrapInLastDay(machineData);
-                    const totalProduction = totalProductionInLastDay(machineData);
+                    const totalScrap = determineScrapInLastDay(machineData);
+                    const totalProduction = determineProductionInLastDay(machineData);
                     const temperatureStatus = determineMachineStatus(machineData);
 
                     // Calculate data
                     const netProduction = calculateNetProduction(totalProduction, totalScrap);
                     const scrapPercentage = calculateScrapPercentage(totalProduction, totalScrap);
+
+                    // const performancePercentage = calculatePerformancePercentage(netProduction);
+                    // const qualityPercentage = calculateQualityPercentage(netProduction, totalProduction);
 
                     // Create nodes
                     const machineDivHeader = document.createElement('h4');
@@ -48,6 +51,7 @@ document.addEventListener('DOMContentLoaded', (event) => {
 
                     // Calculate data
                     const downtimePercentage = calculateDowntimePercentage(totalDownTimeInSeconds);
+                    // const availabilityPercentage = calculateAvailabilityPercentage(downtimePercentage);
 
                     // Create nodes
                     const downtimePercentageDiv = document.createElement('div');
