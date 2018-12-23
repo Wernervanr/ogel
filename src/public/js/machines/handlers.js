@@ -116,7 +116,7 @@ const determineMachineStatus = (machineData) => {
             let c = potentialWarningsObject[(i - 2)];
             let d = potentialWarningsObject[(i - 3)];
 
-            if (a.datetime_from === b.datetime_to && b.datetime_from === c.datetime_to && c.datetime_from === d.datetime_to) {
+            if (d.datetime_to === c.datetime_from && c.datetime_to === b.datetime_from && b.datetime_to === a.datetime_from) {
                 return true;
             }
         }
@@ -138,4 +138,54 @@ const determineMachineStatus = (machineData) => {
     } else {
         return 'statusOk';
     }
+};
+
+const constructChart = (hourlyProduceArray, parentDiv) => {
+    Highcharts.chart(parentDiv, {
+
+        title: {
+            text: 'NET Production per hour'
+        },
+
+        yAxis: {
+            title: {
+                text: 'NET production'
+            }
+        },
+        legend: {
+            layout: 'vertical',
+            align: 'right',
+            verticalAlign: 'middle'
+        },
+
+        plotOptions: {
+            series: {
+                label: {
+                    connectorAllowed: false
+                },
+                pointStart: 1
+            }
+        },
+
+        series: [{
+            name: 'NET produce',
+            data: hourlyProduceArray
+        }],
+
+        responsive: {
+            rules: [{
+                condition: {
+                    maxWidth: 500
+                },
+                chartOptions: {
+                    legend: {
+                        layout: 'horizontal',
+                        align: 'center',
+                        verticalAlign: 'bottom'
+                    }
+                }
+            }]
+        }
+
+    });
 };
