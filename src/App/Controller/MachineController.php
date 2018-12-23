@@ -8,10 +8,10 @@ use App\Model\MachineModel;
 use Slim\Http\Request;
 use Slim\Http\Response;
 
-class MachinesStatusController extends BaseController
+class MachineController extends BaseController
 {
 
-    public function homepage(Request $request, Response $response, array $args)
+    public function homePage(Request $request, Response $response, array $args)
     {
         $viewModel = [
             'pageTitle' => 'Machines',
@@ -33,10 +33,10 @@ class MachinesStatusController extends BaseController
         $machineName = $args['MachineName'];
 
         $machineModel = new MachineModel();
-        $lastDateInDb = $machineModel->getLastDate();
-        $machines = $machineModel->getMachineData($machineName, $lastDateInDb);
+        $_24HoursBeforeLastDateInDb = $machineModel->getLastDateMinus24Hours();
+        $machine = $machineModel->getMachineData($machineName, $_24HoursBeforeLastDateInDb);
 
-        return $response->withJson($machines,201);
+        return $response->withJson($machine,201);
     }
 
     public function machineRuntime(Request $request, Response $response, array $args)
@@ -44,8 +44,8 @@ class MachinesStatusController extends BaseController
         $machineName = $args['MachineName'];
 
         $machineModel = new MachineModel();
-        $lastDateInDb = $machineModel->getLastDate();
-        $machineRuntime = $machineModel->getMachineRuntime($machineName, $lastDateInDb);
+        $_24HoursBeforeLastDateInDb = $machineModel->getLastDateMinus24Hours();
+        $machineRuntime = $machineModel->getMachineRuntime($machineName, $_24HoursBeforeLastDateInDb);
 
         $totalDownTime = 0;
         for ($i = 0; $i < count($machineRuntime); $i++) {
@@ -58,7 +58,7 @@ class MachinesStatusController extends BaseController
 
             } else if ($machineRuntime[$i]['isrunning'] == 0 && end($machineRuntime) == $machineRuntime[$i]) {
                 $convertedTimeStringA = strtotime($machineRuntime[$i]['datetime']);
-                $convertedTimeStringB = strtotime('+24 hour', strtotime($lastDateInDb));
+                $convertedTimeStringB = strtotime('+24 hour', strtotime($_24HoursBeforeLastDateInDb));
 
                 $downtime = $convertedTimeStringB - $convertedTimeStringA;
                 $totalDownTime += $downtime;
@@ -73,32 +73,30 @@ class MachinesStatusController extends BaseController
         $machineName = $args['MachineName'];
 
         $machineModel = new MachineModel();
-        $lastDateInDb = $machineModel->getLastDate();
+        $_24HoursBeforeLastDateInDb = $machineModel->getLastDateMinus24Hours();
 
-        $hourlyProductionArray = [];
+        $hourlyNetProductionArray = [];
 
+        $dateTime = $_24HoursBeforeLastDateInDb;
         for ($i = 0; $i < 24; $i++) {
-            $parsedLastDateInDb = strtotime($lastDateInDb);
-            $parsedLastDatePlusOneHour = strtotime('1 hour', $parsedLastDateInDb);
-            $lastDatePlusOneHour = date('Y-m-d H:i:s', $parsedLastDatePlusOneHour);
+            $parsedDateTime = strtotime($dateTime);
+            $parsedDateTimePlusOneHour = strtotime('1 hour', $parsedDateTime);
+            $dateTimePlusOneHour = date('Y-m-d H:i:s', $parsedDateTimePlusOneHour);
 
             $netProductionPerHour = 0;
-
-            $productionWithinHour = $machineModel->getMachineDataPerHour($machineName, $lastDateInDb, 'PRODUCTION', $lastDatePlusOneHour);
+            $productionWithinHour = $machineModel->getMachineDataPerHour($machineName, $dateTime, $dateTimePlusOneHour, 'PRODUCTION');
             foreach ($productionWithinHour as $productionPerTimeUnit) {
                 $netProductionPerHour += $productionPerTimeUnit['value'];
             }
-
-            $scrapWithinHour = $machineModel->getMachineDataPerHour($machineName, $lastDateInDb, 'SCRAP', $lastDatePlusOneHour);
+            $scrapWithinHour = $machineModel->getMachineDataPerHour($machineName, $dateTime, $dateTimePlusOneHour, 'SCRAP');
             foreach ($scrapWithinHour as $scrapPerTimeUnit) {
                 $netProductionPerHour -= $scrapPerTimeUnit['value'];
             }
 
-            $lastDateInDb = $lastDatePlusOneHour;
-
-            array_push($hourlyProductionArray, $netProductionPerHour);
+            array_push($hourlyNetProductionArray, $netProductionPerHour);
+            $dateTime = $dateTimePlusOneHour;
         }
 
-        return $response->withJson($hourlyProductionArray,201);
+        return $response->withJson($hourlyNetProductionArray,201);
     }
 }

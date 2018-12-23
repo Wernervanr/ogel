@@ -19,7 +19,7 @@ class MachineModel extends PdoModel
         return $statement->fetchAll();
     }
 
-    public function getLastDate() : string
+    public function getLastDateMinus24Hours() : string
     {
         $query =   "SELECT
                       datetime_to
@@ -37,14 +37,14 @@ class MachineModel extends PdoModel
 
         // Convert the result, a string, to UNIX timestamp and subtract 24 hours. Convert back to DATETIME format after.
         $lastDateInDb = strtotime($result['datetime_to']);
-        $fullDayBeforeLastDateInDb = strtotime('-24 hour', $lastDateInDb);
+        $_24HoursBeforeLastDateInDb = strtotime('-24 hour', $lastDateInDb);
 
-        $newDate = date('Y-m-d H:i:s', $fullDayBeforeLastDateInDb);
+        $newDateTime = date('Y-m-d H:i:s', $_24HoursBeforeLastDateInDb);
 
-        return $newDate;
+        return $newDateTime;
     }
 
-    public function getMachineData($machineName, $newDate) : array
+    public function getMachineData($machineName, $startDateTime) : array
     {
         $query = "SELECT
                     *
@@ -56,7 +56,7 @@ class MachineModel extends PdoModel
                     machine_name = :machine_name";
 
         $parameters = [
-            'datetime_from' => $newDate,
+            'datetime_from' => $startDateTime,
             'machine_name' => $machineName
         ];
 
@@ -66,7 +66,7 @@ class MachineModel extends PdoModel
         return $statement->fetchAll();
     }
 
-    public function getMachineRuntime($machineName, $newDate) : array
+    public function getMachineRuntime($machineName, $startDateTime) : array
     {
         $query = "SELECT
                     *
@@ -78,7 +78,7 @@ class MachineModel extends PdoModel
                     machine_name = :machine_name";
 
         $parameters = [
-            'datetime' => $newDate,
+            'datetime' => $startDateTime,
             'machine_name' => $machineName
         ];
 
@@ -88,7 +88,7 @@ class MachineModel extends PdoModel
         return $statement->fetchAll();
     }
 
-    public function getMachineDataPerHour($machineName, $newDate, $variableName, $newDatePlusHour) : array
+    public function getMachineDataPerHour($machineName, $startDateTime, $endDateTime, $variableName) : array
     {
         $query = "SELECT
                     *
@@ -104,8 +104,8 @@ class MachineModel extends PdoModel
                     datetime_to <= :datetime_to";
 
         $parameters = [
-            'datetime_from' => $newDate,
-            'datetime_to' => $newDatePlusHour,
+            'datetime_from' => $startDateTime,
+            'datetime_to' => $endDateTime,
             'machine_name' => $machineName,
             'variable_name' => $variableName
         ];
