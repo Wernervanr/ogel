@@ -6,7 +6,7 @@ document.addEventListener('DOMContentLoaded', (event) => {
         machineNames.forEach(function(machineName) {
 
             const machineDataDiv = document.createElement('div');
-            machineDataDiv.setAttribute('class', 'col-12 col-md-6 col-lg-4 pb-3 flex-column d-flex');
+            machineDataDiv.setAttribute('class', 'col-12 col-md-6 col-lg-4 pb-3 flex-column d-flex border-right');
 
             machinesContainer.appendChild(machineDataDiv);
 
@@ -67,7 +67,7 @@ document.addEventListener('DOMContentLoaded', (event) => {
             getProducePerHour(machineName)
                 .done((data, text) => {
                     const chartDiv = document.createElement('div');
-                    chartDiv.setAttribute('class', 'machineData order-5 mb-2 border-bottom');
+                    chartDiv.setAttribute('class', 'machineData order-5 mb-2 border-bottom border-left');
                     machineDataDiv.appendChild(chartDiv);
 
                     constructChart(data, chartDiv);
