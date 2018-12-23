@@ -26,18 +26,18 @@ document.addEventListener('DOMContentLoaded', (event) => {
 
                     // Create nodes
                     const machineDivHeader = document.createElement('h4');
-                    machineDivHeader.setAttribute('class', 'w-100 p-2 mb-3 bg-dark text-center ' + temperatureStatus);
+                    machineDivHeader.setAttribute('class', 'w-100 order-1 p-2 mb-3 bg-dark text-center ' + temperatureStatus);
                     machineDivHeader.textContent = machineName;
 
                     const netProductionDiv = document.createElement('div');
-                    netProductionDiv.setAttribute('class', 'w-50 order-2 mb-2 p-1 pl-2 border-left');
+                    netProductionDiv.setAttribute('class', 'w-50 order-2 mb-1 pl-2 border-left');
                     netProductionDiv.innerHTML = `<small>Production</small> 
-                                                  <h5 class="text-primary">${netProduction}</h5>`;
+                                                  <p class="text-primary">${netProduction}</p>`;
 
                     const scrapPercentageDiv = document.createElement('div');
-                    scrapPercentageDiv.setAttribute('class', 'w-50 order-3 mb-2 p-1 pl-2 border-left');
+                    scrapPercentageDiv.setAttribute('class', 'w-50 order-3 mb-1 pl-2 border-left');
                     scrapPercentageDiv.innerHTML = `<small>Scrap percentage</small> 
-                                                    <h5 class="text-primary">${scrapPercentage}%</h5>`;
+                                                    <p class="text-primary">${scrapPercentage}%</p>`;
 
                     machineDataDiv.appendChild(machineDivHeader);
                     machineDataDiv.appendChild(netProductionDiv);
@@ -54,9 +54,9 @@ document.addEventListener('DOMContentLoaded', (event) => {
 
                     // Create nodes
                     const downtimePercentageDiv = document.createElement('div');
-                    downtimePercentageDiv.setAttribute('class', 'w-100 order-4 mb-2 p-1 pl-2 border-left');
+                    downtimePercentageDiv.setAttribute('class', 'w-100 order-4 mb-1 pl-2 border-left');
                     downtimePercentageDiv.innerHTML = `<small>Downtime percentage</small> 
-                                                       <h5 class="text-primary">${downtimePercentage}%</h5>`;
+                                                       <p class="text-primary">${downtimePercentage}%</p>`;
 
                     machineDataDiv.appendChild(downtimePercentageDiv);
                 })
