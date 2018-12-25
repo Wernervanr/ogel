@@ -19,6 +19,9 @@ document.addEventListener('DOMContentLoaded', (event) => {
                     const netProduction = calculateNetProduction(totalProduction, totalScrap);
                     const scrapPercentage = calculateScrapPercentage(totalProduction, totalScrap);
 
+                    // const performancePercentage = calculatePerformancePercentage(netProduction);
+                    // const qualityPercentage = calculateQualityPercentage(netProduction, totalProduction);
+
                     // Create nodes
                     const machineDivHeader = document.createElement('h4');
                     machineDivHeader.setAttribute('class', 'w-100 order-1 p-2 mb-3 bg-dark text-center ' + temperatureStatus);
@@ -46,6 +49,7 @@ document.addEventListener('DOMContentLoaded', (event) => {
                 .done((data, text) => {
                     // Calculate data
                     const downtimePercentage = calculateDowntimePercentage(data);
+                    // const availabilityPercentage = calculateAvailabilityPercentage(downtimePercentage);
 
                     // Create nodes
                     const downtimePercentageDiv = document.createElement('div');
