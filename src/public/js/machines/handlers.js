@@ -15,7 +15,6 @@ const getAllMachineNames = (callback) => {
 };
 
 // CALCULATORS
-
 const calculateNetProduction = (grossProduction, scrap) => {
     const netProduction = grossProduction - scrap;
 
@@ -36,32 +35,7 @@ const calculateDowntimePercentage = (totalDownTimeInSeconds) => {
     return roundedUpDowntimePercentage;
 };
 
-// const calculatePerformancePercentage = (netProduction) => {
-//     const rawPerformancePercentage = (netProduction / (24 * 30000)) * 100;
-//     const roundedUpPerformancePercentage = Math.ceil(rawPerformancePercentage * 100) / 100;
-//
-//     return roundedUpPerformancePercentage;
-// };
-//
-// const calculateQualityPercentage = (netProduction, totalProduction) => {
-//     const rawQualityPercentage = (netProduction / totalProduction) * 100;
-//     const roundedUpQualityPercentage = Math.ceil(rawQualityPercentage * 100) / 100;
-//
-//     return roundedUpQualityPercentage;
-// };
-//
-// const calculateAvailabilityPercentage = (downtimePercentage) => {
-//     const uptimePercentage = 100 - downtimePercentage;
-//     const rawAvailabilityPercentage = (uptimePercentage / 75) * 100;
-//     const roundedUpAvailabilityPercentage = Math.ceil(rawAvailabilityPercentage * 100) / 100;
-//
-//
-//     return roundedUpAvailabilityPercentage;
-// };
-
-
 // DETERMINERS
-
 const determineScrapInLastDay = (machineData) => {
     const filteredByScrap = machineData.filter((machine) => {
         if(machine.variable_name === 'SCRAP' ) {
@@ -69,9 +43,9 @@ const determineScrapInLastDay = (machineData) => {
         }
     });
 
-    // Count the total amount of scrap in last 24 hours. ///////////// OPLETTEN, bij de return is een overbodige rekensom nodig. Waarom?
     const totalScrap = filteredByScrap.reduce((total, scrap) => {
-        return total + (scrap.value - 0);
+        const scrapValue = parseInt(scrap.value);
+        return total + scrapValue;
     }, 0);
 
     return totalScrap;
@@ -84,9 +58,9 @@ const determineProductionInLastDay = (machineData) => {
         }
     });
 
-    // Count the total amount of production in last 24 hours. ///////////// OPLETTEN, bij de return is een overbodige rekensom nodig. Waarom?
     const totalProduction = filteredByProduction.reduce((total, production) => {
-        return total + (production.value - 0);
+        const productionValue = parseInt(production.value);
+        return total + productionValue;
     }, 0);
 
     return totalProduction;
@@ -140,9 +114,9 @@ const determineMachineStatus = (machineData) => {
     }
 };
 
+// CHART CONSTRUCTOR
 const constructChart = (hourlyProduceArray, parentDiv) => {
     Highcharts.chart(parentDiv, {
-
         title: {
             text: 'NET Production per hour'
         },
@@ -186,6 +160,5 @@ const constructChart = (hourlyProduceArray, parentDiv) => {
                 }
             }]
         }
-
     });
 };

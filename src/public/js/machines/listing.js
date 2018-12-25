@@ -6,9 +6,7 @@ document.addEventListener('DOMContentLoaded', (event) => {
         machineNames.forEach(function(machineName) {
 
             const machineDataDiv = document.createElement('div');
-            machineDataDiv.setAttribute('class', 'col-12 col-md-6 col-lg-4 pb-3 flex-column d-flex border-right');
-
-            machinesContainer.appendChild(machineDataDiv);
+            machineDataDiv.setAttribute('class', 'col-12 col-md-6 col-lg-4 pb-3 flex-column d-flex');
 
             getMachine(machineName)
                 .done((data, text) => {
@@ -21,9 +19,6 @@ document.addEventListener('DOMContentLoaded', (event) => {
                     const netProduction = calculateNetProduction(totalProduction, totalScrap);
                     const scrapPercentage = calculateScrapPercentage(totalProduction, totalScrap);
 
-                    // const performancePercentage = calculatePerformancePercentage(netProduction);
-                    // const qualityPercentage = calculateQualityPercentage(netProduction, totalProduction);
-
                     // Create nodes
                     const machineDivHeader = document.createElement('h4');
                     machineDivHeader.setAttribute('class', 'w-100 order-1 p-2 mb-3 bg-dark text-center ' + temperatureStatus);
@@ -31,7 +26,7 @@ document.addEventListener('DOMContentLoaded', (event) => {
 
                     const netProductionDiv = document.createElement('div');
                     netProductionDiv.setAttribute('class', 'w-50 order-2 mb-1 pl-2 border-left');
-                    netProductionDiv.innerHTML = `<small>Production</small> 
+                    netProductionDiv.innerHTML = `<small>NET Production</small> 
                                                   <p class="text-primary">${netProduction}</p>`;
 
                     const scrapPercentageDiv = document.createElement('div');
@@ -49,8 +44,8 @@ document.addEventListener('DOMContentLoaded', (event) => {
 
             getMachineRuntime(machineName)
                 .done((data, text) => {
+                    // Calculate data
                     const downtimePercentage = calculateDowntimePercentage(data);
-                    // const availabilityPercentage = calculateAvailabilityPercentage(downtimePercentage);
 
                     // Create nodes
                     const downtimePercentageDiv = document.createElement('div');
@@ -67,7 +62,7 @@ document.addEventListener('DOMContentLoaded', (event) => {
             getProducePerHour(machineName)
                 .done((data, text) => {
                     const chartDiv = document.createElement('div');
-                    chartDiv.setAttribute('class', 'machineData order-5 mb-2 border-bottom border-left');
+                    chartDiv.setAttribute('class', 'machineData order-5 mb-2 border-left');
                     machineDataDiv.appendChild(chartDiv);
 
                     constructChart(data, chartDiv);
@@ -75,6 +70,8 @@ document.addEventListener('DOMContentLoaded', (event) => {
                 .fail((request, status, error) => {
                     console.log('balen joh');
                 });
+
+            machinesContainer.appendChild(machineDataDiv);
         });
     });
 });
