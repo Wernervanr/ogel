@@ -3,7 +3,7 @@ const getAllMachineNames = (callback) => {
         .done((data, text) => {
             let machineNames = [];
 
-            data.forEach(function(machineName) {
+            data.forEach((machineName) => {
                 machineNames.push(machineName.machine_name);
             });
 

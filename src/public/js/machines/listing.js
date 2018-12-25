@@ -3,10 +3,10 @@ document.addEventListener('DOMContentLoaded', (event) => {
     const machinesContainer = document.querySelector('.machineContainer');
 
     getAllMachineNames((machineNames) => {
-        machineNames.forEach(function(machineName) {
+        machineNames.forEach((machineName) => {
 
             const machineDataDiv = document.createElement('div');
-            machineDataDiv.setAttribute('class', 'col-12 col-md-6 col-lg-4 pb-3 flex-column d-flex');
+            machineDataDiv.setAttribute('class', 'col-md-6 col-lg-4 pb-3 flex-column d-flex');
 
             getMachine(machineName)
                 .done((data, text) => {
@@ -21,16 +21,16 @@ document.addEventListener('DOMContentLoaded', (event) => {
 
                     // Create nodes
                     const machineDivHeader = document.createElement('h4');
-                    machineDivHeader.setAttribute('class', 'w-100 order-1 p-2 mb-3 bg-dark text-center ' + temperatureStatus);
+                    machineDivHeader.setAttribute('class', 'order-1 p-2 mb-3 bg-dark text-center ' + temperatureStatus);
                     machineDivHeader.textContent = machineName;
 
                     const netProductionDiv = document.createElement('div');
-                    netProductionDiv.setAttribute('class', 'w-50 order-2 mb-1 pl-2 border-left');
+                    netProductionDiv.setAttribute('class', 'order-2 mb-1 pl-2 border-left');
                     netProductionDiv.innerHTML = `<small>NET Production</small> 
                                                   <p class="text-primary">${netProduction}</p>`;
 
                     const scrapPercentageDiv = document.createElement('div');
-                    scrapPercentageDiv.setAttribute('class', 'w-50 order-3 mb-1 pl-2 border-left');
+                    scrapPercentageDiv.setAttribute('class', 'order-3 mb-1 pl-2 border-left');
                     scrapPercentageDiv.innerHTML = `<small>Scrap percentage</small> 
                                                     <p class="text-primary">${scrapPercentage}%</p>`;
 
@@ -49,7 +49,7 @@ document.addEventListener('DOMContentLoaded', (event) => {
 
                     // Create nodes
                     const downtimePercentageDiv = document.createElement('div');
-                    downtimePercentageDiv.setAttribute('class', 'w-100 order-4 mb-1 pl-2 border-left');
+                    downtimePercentageDiv.setAttribute('class', 'order-4 mb-1 pl-2 border-left');
                     downtimePercentageDiv.innerHTML = `<small>Downtime percentage</small> 
                                                        <p class="text-primary">${downtimePercentage}%</p>`;
 
