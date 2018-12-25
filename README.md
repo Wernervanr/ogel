@@ -31,7 +31,7 @@ Now enter the following URL in your browser:
 
 `http://localhost:8080`
 
-If the application is installed properly, you should now see the first screen of the Event Management System.
+If the application is installed properly, you should now see the machine data overview.
 
 If for some reason you wish to run the application through Apache or Nginx, follow the instructions here:
 
