@@ -11,7 +11,7 @@ use Slim\Http\Response;
 class MachineController extends BaseController
 {
 
-    public function homePage(Request $request, Response $response, array $args)
+    public function homepage(Request $request, Response $response, array $args)
     {
         $viewModel = [
             'pageTitle' => 'Machines',
