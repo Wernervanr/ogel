@@ -19,7 +19,7 @@ class MachineModel extends PdoModel
         return $statement->fetchAll();
     }
 
-    public function getLastDate() : string
+    public function getLastDateMinus24Hours() : string
     {
         $query =   "SELECT
                       datetime_to
@@ -37,27 +37,77 @@ class MachineModel extends PdoModel
 
         // Convert the result, a string, to UNIX timestamp and subtract 24 hours. Convert back to DATETIME format after.
         $lastDateInDb = strtotime($result['datetime_to']);
-        $fullDayBeforeLastDateInDb = strtotime('-24 hour', $lastDateInDb);
+        $_24HoursBeforeLastDateInDb = strtotime('-24 hour', $lastDateInDb);
 
-        $newDate = date('Y-m-d H:i:s', $fullDayBeforeLastDateInDb);
+        $newDateTime = date('Y-m-d H:i:s', $_24HoursBeforeLastDateInDb);
 
-        return $newDate;
+        return $newDateTime;
     }
 
-    public function getMachine($machineName, $newDate) : array
+    public function getMachineData($machineName, $startDateTime) : array
     {
         $query = "SELECT
                     *
                   FROM
                     Production
                   WHERE
-                    datetime_to > :datetime_to 
+                    datetime_from >= :datetime_from
                   AND 
                     machine_name = :machine_name";
 
         $parameters = [
-            'datetime_to' => $newDate,
+            'datetime_from' => $startDateTime,
             'machine_name' => $machineName
+        ];
+
+        $statement = $this->getConnection()->prepare($query);
+        $statement->execute($parameters);
+
+        return $statement->fetchAll();
+    }
+
+    public function getMachineRuntime($machineName, $startDateTime) : array
+    {
+        $query = "SELECT
+                    *
+                  FROM
+                    Runtime
+                  WHERE
+                    datetime >= :datetime 
+                  AND 
+                    machine_name = :machine_name";
+
+        $parameters = [
+            'datetime' => $startDateTime,
+            'machine_name' => $machineName
+        ];
+
+        $statement = $this->getConnection()->prepare($query);
+        $statement->execute($parameters);
+
+        return $statement->fetchAll();
+    }
+
+    public function getMachineDataPerHour($machineName, $startDateTime, $endDateTime, $variableName) : array
+    {
+        $query = "SELECT
+                    *
+                  FROM
+                    Production
+                  WHERE
+                    machine_name = :machine_name
+                  AND 
+                    variable_name = :variable_name
+                  AND 
+                    datetime_from >= :datetime_from
+                  AND
+                    datetime_to <= :datetime_to";
+
+        $parameters = [
+            'datetime_from' => $startDateTime,
+            'datetime_to' => $endDateTime,
+            'machine_name' => $machineName,
+            'variable_name' => $variableName
         ];
 
         $statement = $this->getConnection()->prepare($query);

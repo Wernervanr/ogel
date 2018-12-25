@@ -19,9 +19,11 @@ $configuration = [
 $app = new App($configuration);
 
 // Define our routes
-$app->get('/', 'App\Controller\MachinesStatusController:homepage');
-$app->get('/machines', 'App\Controller\MachinesStatusController:machineNames');
-$app->get('/machines/{MachineName}', 'App\Controller\MachinesStatusController:list');
+$app->get('/', 'App\Controller\MachineController:homePage');
+$app->get('/machines', 'App\Controller\MachineController:machineNames');
+$app->get('/machines/{MachineName}', 'App\Controller\MachineController:machineData');
+$app->get('/machines/runtime/{MachineName}', 'App\Controller\MachineController:machineRunTime');
+$app->get('/machines/produceperhour/{MachineName}', 'App\Controller\MachineController:productionPerHour');
 
 // Execute the current request
 $app->run();

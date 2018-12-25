@@ -1,5 +1,6 @@
 <?php include_once(__DIR__ . '/../Components/header.php'); ?>
     <div class="container">
+        <div class="h1 text-center mb-4">Machines Status' in last 24 hours</div>
         <div class="machineContainer row"></div>
     </div>
 

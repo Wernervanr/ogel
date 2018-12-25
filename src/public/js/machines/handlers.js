@@ -1,5 +1,3 @@
-// GET MACHINE NAMES
-
 const getAllMachineNames = (callback) => {
     getMachineNames()
         .done((data, text) => {
@@ -16,59 +14,7 @@ const getAllMachineNames = (callback) => {
         });
 };
 
-// DETERMINERS
-
-const totalScrapInLastDay = (machineData) => {
-    const sortedByScrap = machineData.filter((machine) => {
-        if(machine.variable_name === 'SCRAP' ) {
-            return true;
-        }
-    });
-
-    // Count the total amount of scrap in last 24 hours. ///////////// OPLETTEN, bij de return is een overbodige rekensom nodig. Waarom?
-    const totalScrap = sortedByScrap.reduce((total, scrap) => {
-        return total + (scrap.value - 0);
-    }, 0);
-
-    return totalScrap;
-};
-
-const totalProductionInLastDay = (machineData) => {
-    const sortedByProduction = machineData.filter((machine) => {
-        if(machine.variable_name === 'PRODUCTION' ) {
-            return true;
-        }
-    });
-
-    // Count the total amount of production in last 24 hours. ///////////// OPLETTEN, bij de return is een overbodige rekensom nodig. Waarom?
-    const totalProduction = sortedByProduction.reduce((total, production) => {
-        return total + (production.value - 0);
-    }, 0);
-
-    return totalProduction;
-};
-
-const averageCoreTemperatureInLastDay = (machineData) => {
-    const sortedByTemperature = machineData.filter((machine) => {
-        if(machine.variable_name === 'CORE TEMPERATURE' ) {
-            return true;
-        }
-    });
-
-    // Determine the amount the core temperature is measured,
-    const timesCoreTemperatureIsMeasured = sortedByTemperature.length;
-    // Add-up the temperature for each time this was measured.
-    const totalCoreTemperature = sortedByTemperature.reduce((total, temperature) => {
-        return total + (temperature.value - 0);
-    }, 0);
-    // Divide the total of the added up temperatures by the amount that the temperature was measured.
-    const averageCoreTemperature = totalCoreTemperature / timesCoreTemperatureIsMeasured;
-
-    return averageCoreTemperature;
-};
-
 // CALCULATORS
-
 const calculateNetProduction = (grossProduction, scrap) => {
     const netProduction = grossProduction - scrap;
 
@@ -80,4 +26,139 @@ const calculateScrapPercentage = (grossProduction, scrap) => {
     const roundedUpScrapPercentage = Math.ceil(rawScrapPercentage * 1000) / 1000;
 
     return roundedUpScrapPercentage;
+};
+
+const calculateDowntimePercentage = (totalDownTimeInSeconds) => {
+    const rawDowntimePercentage = (((totalDownTimeInSeconds / 60) / 60) / 24) * 100;
+    const roundedUpDowntimePercentage = Math.ceil(rawDowntimePercentage * 1000) / 1000;
+
+    return roundedUpDowntimePercentage;
+};
+
+// DETERMINERS
+const determineScrapInLastDay = (machineData) => {
+    const filteredByScrap = machineData.filter((machine) => {
+        if(machine.variable_name === 'SCRAP' ) {
+            return true;
+        }
+    });
+
+    const totalScrap = filteredByScrap.reduce((total, scrap) => {
+        const scrapValue = parseInt(scrap.value);
+        return total + scrapValue;
+    }, 0);
+
+    return totalScrap;
+};
+
+const determineProductionInLastDay = (machineData) => {
+    const filteredByProduction = machineData.filter((machine) => {
+        if(machine.variable_name === 'PRODUCTION' ) {
+            return true;
+        }
+    });
+
+    const totalProduction = filteredByProduction.reduce((total, production) => {
+        const productionValue = parseInt(production.value);
+        return total + productionValue;
+    }, 0);
+
+    return totalProduction;
+};
+
+const determineMachineStatus = (machineData) => {
+    const filteredByCoreTemperature = machineData.filter((machine) => {
+        if (machine.variable_name === 'CORE TEMPERATURE') {
+            return true;
+        }
+    });
+    const filteredByPotentialWarnings = filteredByCoreTemperature.filter((coreTemperature) => {
+        if(coreTemperature.value > 85 && coreTemperature.value <= 100) {
+            return true;
+        }
+    });
+    const filteredByPotentialFatals = filteredByCoreTemperature.filter((coreTemperature) => {
+        if(coreTemperature.value > 100) {
+            return true;
+        }
+    });
+
+    const checkIfWarning = (potentialWarningsObject) => {
+        for (i = 3; i < potentialWarningsObject.length; i++) {
+            let a = potentialWarningsObject[i];
+            let b = potentialWarningsObject[(i - 1)];
+            let c = potentialWarningsObject[(i - 2)];
+            let d = potentialWarningsObject[(i - 3)];
+
+            if (d.datetime_to === c.datetime_from && c.datetime_to === b.datetime_from && b.datetime_to === a.datetime_from) {
+                return true;
+            }
+        }
+    };
+
+    const checkIfFatal = (potentialFatalsObject) => {
+        if (potentialFatalsObject.length > 0) {
+            return true;
+        }
+    };
+
+    const isWarning = checkIfWarning(filteredByPotentialWarnings);
+    const isFatal = checkIfFatal(filteredByPotentialFatals);
+
+    if (isWarning === true){
+        return 'statusWarning';
+    } else if (isFatal === true) {
+        return 'statusFatal';
+    } else {
+        return 'statusOk';
+    }
+};
+
+// CHART CONSTRUCTOR
+const constructChart = (hourlyProduceArray, parentDiv) => {
+    Highcharts.chart(parentDiv, {
+        title: {
+            text: 'NET Production per hour'
+        },
+
+        yAxis: {
+            title: {
+                text: 'NET production'
+            }
+        },
+        legend: {
+            layout: 'vertical',
+            align: 'right',
+            verticalAlign: 'middle'
+        },
+
+        plotOptions: {
+            series: {
+                label: {
+                    connectorAllowed: false
+                },
+                pointStart: 1
+            }
+        },
+
+        series: [{
+            name: 'NET produce',
+            data: hourlyProduceArray
+        }],
+
+        responsive: {
+            rules: [{
+                condition: {
+                    maxWidth: 500
+                },
+                chartOptions: {
+                    legend: {
+                        layout: 'horizontal',
+                        align: 'center',
+                        verticalAlign: 'bottom'
+                    }
+                }
+            }]
+        }
+    });
 };

@@ -1,12 +1,15 @@
 .statusOk {
-    border: 2px solid lawngreen;
-    margin: 1px;
+    color: lawngreen;
 }
 
 .statusWarning {
-    border: 2px solid orange;
+    color: orange;
 }
 
 .statusFatal {
-    border: 2px solid red;
+    color: red;
+}
+
+.footer {
+    font-size: .7em;
 }
